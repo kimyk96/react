@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+		<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<title>ToDo 리스트</title>
+		<style>
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+				border-collapse: collapse;
+				overflow: hidden;
+			}
+			#root {
+				width: 100%;
+			}
+			#root div h1 {
+				padding: 20px 0;
+			}
+			#root div h2 {
+				padding: 30px 0 0 0;
+			}
+
+			#root > div > div {
+				padding: 0 15px;
+			}
+			#root > div > div.title {
+				background-color: #efefef;
+			}
+			#root > div > div div {
+				display: flex;
+				width: 100%;
+				padding-bottom: 30px;
+			}
+			#root > div > div div input {
+				width: 80%;
+				padding: 10px;
+				border-radius: 0;
+				border: 1px solid #000;
+			}
+			#root > div > div div button {
+				width: 20%;
+				padding: 10px;
+				border-radius: 0;
+				border: 1px solid #000;
+				background-color: #303030;
+				color: #fff;
+			}
+			#root > div ul {
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+				padding: 0 0 20px 0;
+			}
+			#root > div ul li {
+				width: 100%;
+				padding: 15px 10px;
+				border-bottom: 1px solid #efefef;
+			}
+			#root > div ul li::before {
+				content: "> ";
+				font-weight: bold;
+			}
+			/* #root > div ul li #text{flex-grow: 1; } */
+			#root > div ul li span {
+				float: right;
+				padding: 5px;
+				font-size: 12px;
+			}
+			#root > div ul li span.btn_del {
+				color: red;
+			}
+			#root > div ul li span.btn_done {
+				color: green;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="root"></div>
+		<script type="text/babel">
+			function App() {
+				return <InputSection />;
+			}
+
+			function InputSection() {
+				const listObject = [
+					{ id: 0, value: "할일을" },
+					{ id: 1, value: "추가해보세요!" },
+				];
+
+				const [input, setInput] = React.useState();
+				const [list, setList] = React.useState(listObject);
+				const [doneList, setDoneList] = React.useState([]);
+
+				// 인풋 변경 감지
+				function onChange(e) {
+					setInput(e.target.value);
+				}
+				// 인풋 엔터 감지
+				function onKeyDown(e) {
+					if (e.code == "Enter") {
+						addToDo();
+					}
+				}
+
+				// 리스트 추가 버튼 트리거
+				const addToDo = () => {
+					if (input) {
+						setList((prevList) => [...prevList, { id: list.length, value: input }]);
+						setInput("");
+					}
+				};
+
+				// 삭제
+				function deleteItem(id, listNum) {
+					if (listNum == "list1") {
+						const newList = list.filter((item) => item.id !== id);
+						setList(newList);
+					} else {
+						const newList = doneList.filter((item) => item.id !== id);
+						setDoneList(newList);
+					}
+				}
+				// 완료
+				function finishedItem(id, value) {
+					deleteItem(id, "list1");
+					setDoneList((prevList) => [...prevList, { id: doneList.length, value: value }]);
+				}
+
+				return (
+					<div>
+						<div className="title">
+							<h1>ToDo</h1>
+							<div>
+								<input
+									type="text"
+									value={input}
+									onChange={onChange}
+									onKeyDown={onKeyDown}
+									placeHolder="해야하는 일을 적어주세요!"
+								/>
+								<button onClick={addToDo}>추가하기</button>
+							</div>
+						</div>
+						<div>
+							<h2>해야할 일</h2>
+							<ul>
+								{list.map((item) => (
+									<li key={item.id}>
+										{item.value}
+										<span
+											className="btn_done"
+											onClick={() => finishedItem(item.id, item.value)}
+										>
+											완료
+										</span>
+										<span
+											className="btn_del"
+											onClick={() => deleteItem(item.id, "list1")}
+										>
+											삭제
+										</span>
+									</li>
+								))}
+							</ul>
+						</div>
+						<div>
+							<h2>끝난 일</h2>
+							<ul>
+								{doneList.map((item) => (
+									<li key={item.id}>
+										{item.value}
+										<span
+											className="btn_del"
+											onClick={() => deleteItem(item.id, "list2")}
+										>
+											삭제
+										</span>
+									</li>
+								))}
+							</ul>
+						</div>
+					</div>
+				);
+			}
+
+			ReactDOM.render(<App />, document.getElementById("root"));
+		</script>
+	</body>
+</html>

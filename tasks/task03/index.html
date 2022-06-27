@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+		<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<title>http Method</title>
+		<!--  -->
+	</head>
+	<body>
+		<div id="root"></div>
+		<script type="text/babel">
+			function App() {
+				return <input />;
+			}
+
+			ReactDOM.render(<App />, document.getElementById("root"));
+
+
+
+
+
+			let pageno = 1;
+			let pagesize = 10;
+			let totalcount = 123;
+			let countOfPage = Math.ceil(totalcount / pagesize);
+			console.log(countOfPage);
+
+			totalcount = 150;
+			countOfPage = Math.ceil(totalcount / pagesize);
+			console.log(countOfPage);
+
+		</script>
+	</body>
+</html>
